@@ -7,4 +7,5 @@ ng.config ($stateProvider) ->
     controller: 'AdminCtrl'
 
 ng.controller 'AdminCtrl', ($scope, host) ->
-  $scope.hello = host 'admin_dbinfo'
+  host('admin_dbinfo').then (res) ->
+    $scope.hello = res
