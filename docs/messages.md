@@ -2,7 +2,7 @@ Measurement dataflow overview
 =============================
 
 This document tries to cover all the important points you need to know as a
-driver/briq writer when it comes to the receiving and processing of packet
+driver/briq writer, when it comes to the receiving and processing of packet
 from remote nodes through to the determination of what the data actually
 means.
 
@@ -33,7 +33,7 @@ is attached running the RF12demo sketch.  It sends two messages:
 
   This is also the same object each time, so don't try to store it. The
 fields are mostly self-explanitory.  The bytes are as they come from the
-rf12demo sketch.  That is, the first byte is the node is, followed by the
+rf12demo sketch.  That is, the first byte is the node id, followed by the
 rest of the data.
 
 drivers briq
@@ -45,7 +45,7 @@ The above messages are picked up by the drivers briq.
   determine the name based on known announcer ids.
 
 * on `rf12.packet` it looks up the driver from the static list
-  (nodeMap.rf12nodes) or as determined by the announcer id from a previously
+  (nodeMap.rf12nodes) or is determined by the announcer id from a previously
   receive `rf12.announce` packet.
 
   The packet object is passed as is and the driver should return a hash with the decoded readings. Simply:
@@ -61,7 +61,7 @@ The above messages are picked up by the drivers briq.
 
         state.store 'readings', {key:"RF12:#{packet.group}:#{packet.id}.#{name}", time: <timestamp>, reading1: <value1>, ...}
 
-  The name can either by determined by the driver by using the 'tag' field,
+  The name can either be determined by the driver or by using the 'tag' field,
   otherwise it is the name of the driver. Note this name is used later to
   determine how to decode the readings.
 
