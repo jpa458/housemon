@@ -35,7 +35,7 @@ module.exports = (app, plugin) ->
     #   console.log 'db#', array.length
     #   for x in array
     #     console.log ' ', x.key, '=', x.value
-    ###
+    
     readings = createLogStream('app/replay/20121130.txt.gz')
       .pipe(new Replayer)
       .pipe(new Parser)
@@ -46,7 +46,7 @@ module.exports = (app, plugin) ->
 
     readings
       .pipe(new StatusTable app.db)
-    ###
+    
     jeelink = new Serial('usb-A1014KGL').on 'open', ->
 
       jeelink # log raw data to file, as timestamped lines of text
