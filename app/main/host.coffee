@@ -17,12 +17,6 @@ module.exports = (app, plugin) ->
   app.register 'nodemap.rf12-19', 'ookrelay'
   app.register 'nodemap.rf12-23', 'roomnode'
   app.register 'nodemap.rf12-24', 'roomnode'
-  
-  app.register 'nodemap.rf12-868,212,5', 'emontxNode'
-  app.register 'nodemap.rf12-868,212,11', 'emonLCD'
-  app.register 'nodemap.rf12-868,212,17', 'barotxNode'
-  app.register 'nodemap.rf12-868,212,16', 'indoorClimateNode'
-  app.register 'nodemap.rf12-868,212,18', 'wxtxNode'
 
   app.on 'running', ->
     Logger = @registry.sink.logger
