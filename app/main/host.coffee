@@ -27,6 +27,7 @@ module.exports = (app, plugin) ->
     ReadingLog = @registry.sink.readinglog
     StatusTable = @registry.sink.statustable
     createLogStream = @registry.source.logstream
+    TimeBroadcast = @registry.source.timebroadcast
 
     # app.db.on 'put', (key, val) ->
     #   console.log 'db:', key, '=', val
@@ -34,7 +35,7 @@ module.exports = (app, plugin) ->
     #   console.log 'db#', array.length
     #   for x in array
     #     console.log ' ', x.key, '=', x.value
-      
+    
     readings = createLogStream('app/replay/20121130.txt.gz')
       .pipe(new Replayer)
       .pipe(new Parser)
@@ -45,8 +46,8 @@ module.exports = (app, plugin) ->
 
     readings
       .pipe(new StatusTable app.db)
-
-    jeelink = new Serial('usb-A900ad5m').on 'open', ->
+    
+    jeelink = new Serial('usb-A1014KGL').on 'open', ->
 
       jeelink # log raw data to file, as timestamped lines of text
           .pipe(new Logger) # sink, can't chain this further
@@ -55,3 +56,8 @@ module.exports = (app, plugin) ->
           .pipe(new Parser)
           .pipe(new Dispatcher)
           .pipe(new ReadingLog app.db)
+          
+      jeelink
+          .pipe(new StatusTable app.db)
+          
+    timebroadcast = new TimeBroadcast '/dev/usbserial-A1014KGL'
