@@ -29,7 +29,7 @@ setupDatabase = (path) ->
   db.lastKey = keyBoundaryFinder '~~', '~', true
 
   # the dumb approach of scanning all keys to find the prefixes won't work for
-  # lots of keys, we nned to skip over each prefix found when filling the list
+  # lots of keys, we need to skip over each prefix found when filling the list
   db.getPrefixDetails = (cb) ->
     result = {}
 

@@ -9,6 +9,8 @@ html(lang='en')
     
     title #{title}
     
+    script.
+      console.log('layout: HEAD');
     block styles
       link(rel='stylesheet',href='/main/style.css')
 
@@ -45,10 +47,10 @@ html(lang='en')
 
     block scripts
       script.
-        console.log('MYAPP');
+        console.log('layout: MYAPP');
         angular.module('myApp', ['ui.router', 'ngAnimate']);
       script(src='/primus/primus.js')
       script.
-        console.log('BOOT');
+        console.log('layout: BOOT');
         angular.module('myApp').constant('primus', new Primus);
         angular.bootstrap(document, ['myApp']);
