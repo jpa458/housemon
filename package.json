@@ -23,6 +23,7 @@
     "coffee-script": "~1.6.3"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "postinstall":"node ./scripts/postinstall.js"
   }
 }
