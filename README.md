@@ -4,9 +4,11 @@ Real-time home monitoring and automation.
 
 > **This is the DEVELOPMENT branch of HouseMon. See README-0.8 for older info.**
 
-The server side of HouseMon is undergoing some radical changes, such as
-replacing Node.js with an MQTT + LevelDB + Lua server, written in Go.
-The new server core architecture is also used in Tosqa and is called "JeeBus".
+The server side of HouseMon is undergoing some radical changes, such as  
+replacing Node.js with an MQTT + LevelDB + Lua server, written in Go.  
+This server core architecture is also used in Tosqa and is called "JeeBus".  
+
+![HM-0.9-diagram.png](HM-0.9-diagram.png)
 
 # Installation
 
