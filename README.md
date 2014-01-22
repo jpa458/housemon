@@ -27,6 +27,28 @@ To launch this early HouseMon 0.9 setup, perform the following steps:
 
 The definitive way to launch HouseMon will be simplified once the dust settles.
 
+# Details
+
+In this initial phase, JeeBus has been tied into HouseMon as follows:
+
+* there's a `main.go` file which defines additional HM-specific sub-commands
+* the `app/jeebus` module connects a _second_ websocket to port 3334, i.e. JB
+* the `./logger` and `./storage` folders used from Node.js have been renamed
+
+This allows keeping the Primus Live update mechanism and automatic compilation
+of CoffeeScript, Jade, and Stylus. As things get moved over, and all Primus-
+based RPC calls are replaced by calls over the JeeBus websocket, the websocket
+on port 3333 will end up doing less and less, until it only handles reload and
+CSS update triggers whenever source file changes are detected by Primus Live.
+
+HouseMon is available at `localhost:3333` as long as both the JeeBus server
+(`jb run :3334`) and the Primus Live server (`node .`) are kept running. For
+additional services specific to HouseMon, more processes need to be started,
+such as `housemon logger` (i.e. `go run main.go logger` in developer mode).
+
+Note that the old data is now in `./storage-old`. There's no data sharing with
+the new JeeBus data (in `./storage`). The *.old stuff will soon be dropped.
+
 # Documentation
 
 There is a _little_ documentation about HouseMon in the `README-0.8.md` file.
