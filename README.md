@@ -4,9 +4,9 @@ Real-time home monitoring and automation.
 
 > **This is the DEVELOPMENT branch of HouseMon. See README-0.8 for older info.**
 
-The server side of HouseMon is undergoing some radical changes, such as  
+The server side of HouseMon is undergoing some radical changes, caused by  
 replacing Node.js with an MQTT + LevelDB + Lua server, written in Go.  
-This server core architecture is also used in Tosqa and is called "JeeBus".  
+This server core architecture is also used in Tosqa and is called "JeeBus".
 
 ![HM-0.9-diagram.png](HM-0.9-diagram.png)
 
@@ -21,7 +21,7 @@ Once Go is installed, you need JeeBus, see <https://github.com/jcw/jeebus>.
 To launch this early HouseMon 0.9 setup, perform the following steps:
 
 * make sure you're in the HouseMon root directory, next to this README
-* launch JeeBus as follows, and keept it running: `jb run :3334`
+* launch JeeBus as follows, and keep it running: `jb run :3334`
 * in a separate terminal window, launch Node.js as follows: `node .`
 * now go to the HouseMon pages by browsing to `localhost:3333` (not a typo)
 
@@ -47,7 +47,7 @@ additional services specific to HouseMon, more processes need to be started,
 such as `housemon logger` (i.e. `go run main.go logger` in developer mode).
 
 Note that the old data is now in `./storage-old`. There's no data sharing with
-the new JeeBus data (in `./storage`). The *.old stuff will soon be dropped.
+the new JeeBus data (in `./storage`). The *-old stuff will soon be dropped.
 
 # Documentation
 
