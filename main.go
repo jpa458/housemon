@@ -15,7 +15,11 @@ const LOGGER_PATH_FMT = "./logger/%d"
 var currentLogFile *os.File
 
 func main() {
-	switch jeebus.SubCommand("housemon") {
+	if len(os.Args) <= 1 {
+		log.Fatalf("usage: housemon <cmd> ...")
+	}
+
+	switch os.Args[1] {
 
 	case "logger":
 		logger()
