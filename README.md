@@ -29,7 +29,7 @@ The definitive way to launch HouseMon will be simplified once the dust settles.
 
 # Documentation
 
-There is a _little_ documentation about HouseMon in the `README-0.md` file.
+There is a _little_ documentation about HouseMon in the `README-0.8.md` file.
 
 # License
 
