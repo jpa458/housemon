@@ -11,14 +11,10 @@ ng.config ($stateProvider, navbarProvider) ->
 
 ng.run ($rootScope) ->
 
-  setCount = (data) ->
-    $rootScope.$apply ->
-      $rootScope.count = data
-
   reconnect = (firstCall) ->
     # the websocket is served from the same site as the web page
     # ws = new WebSocket "ws://#{location.host}/ws"
-    ws = new WebSocket "ws://#{location.hostname}:3334/ws"
+    ws = new WebSocket "ws://#{location.hostname}:3334/ws", ['HouseMon']
 
     ws.onopen = ->
       # location.reload()  unless firstCall
