@@ -30,7 +30,7 @@ func main() {
 }
 
 func logger() {
-	for msg := range jeebus.ListenToServer("if/serial/#") {
+	for msg := range jeebus.ConnectToServer("sv/#") {
 		now := time.Now().UTC()
 		datePath := dateFilename(now)
 		if currentLogFile == nil || datePath != currentLogFile.Name() {
@@ -46,10 +46,10 @@ func logger() {
 		}
 		// L 01:02:03.537 usb-A40117UK OK 9 25 54 66 235 61 210 226 33 19
 		h, m, s := now.Clock()
-		tail := strings.SplitN(msg.T, "/", 4)[3]
-		port := strings.Replace(tail, "tty.usbserial-", "usb-", 1)
+		// FIXME hacked hard-coded device name into message until JB is fixed!
+		port := strings.SplitN(msg.T + "/usb-A40115A2", "/", 3)[2]
 		line := fmt.Sprintf("L %02d:%02d:%02d.%03d %s %s\n",
-			h, m, s, now.Nanosecond()/1000000, port, msg.P.([]byte))
+			h, m, s, now.Nanosecond()/1000000, port, []byte(msg.P))
 		currentLogFile.WriteString(line)
 	}
 }
