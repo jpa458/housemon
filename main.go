@@ -19,8 +19,7 @@ func main() {
 	switch os.Args[1] {
 
 	case "decode":
-		var rdClient jeebus.Client
-		rdClient.Connect("rd")
+		rdClient := jeebus.NewClient("rd")
 		rdClient.Register("RF12demo/#", &RF12demoDecodeService{})
 		<-make(chan byte) // wait forever
 
