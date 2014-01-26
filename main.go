@@ -33,19 +33,18 @@ type RF12demoDecodeService struct {
 }
 
 func (s *RF12demoDecodeService) Handle(m *jeebus.Message) {
-	// log.Println("RF12", m)
 	text := m.Get("text")
-	if strings.HasPrefix(text, "[RF12demo.") {
-		fmt.Println(text)
-	}
 	if strings.HasPrefix(text, "OK ") {
 		var buf bytes.Buffer
+		// convert the line of decimal byte values to a byte buffer
 		for _, v := range strings.Split(text[3:], " ") {
 			n, err := strconv.Atoi(v)
 			check(err)
 			buf.WriteByte(byte(n))
 		}
-		fmt.Println(buf.Bytes())
+		now := m.GetInt64("time")
+		dev := strings.SplitN(m.T, "/", 2)[1]
+		fmt.Printf("%d %s %X\n", now, dev, buf.Bytes())
 	}
 }
 
