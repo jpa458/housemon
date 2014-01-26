@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/jcw/jeebus"
@@ -37,6 +39,18 @@ func (s *RF12demoDecodeService) Handle(m *jeebus.Message) {
 		fmt.Println(text)
 	}
 	if strings.HasPrefix(text, "OK ") {
-		fmt.Println(text)
+		var buf bytes.Buffer
+		for _, v := range strings.Split(text[3:], " ") {
+			n, err := strconv.Atoi(v)
+			check(err)
+			buf.WriteByte(byte(n))
+		}
+		fmt.Println(buf.Bytes())
+	}
+}
+
+func check(err error) {
+	if err != nil {
+		log.Fatal(err)
 	}
 }
