@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -30,7 +31,12 @@ func main() {
 }
 
 func logger() {
-	for msg := range jeebus.ConnectToServer("sv/#") {
+	for msg := range jeebus.ConnectToServer("rd/#") {
+		var any struct { Text string }
+		err := json.Unmarshal(msg.P, &any)
+		if err != nil {
+			log.Fatal(err)
+		}
 		now := time.Now().UTC()
 		datePath := dateFilename(now)
 		if currentLogFile == nil || datePath != currentLogFile.Name() {
@@ -46,10 +52,9 @@ func logger() {
 		}
 		// L 01:02:03.537 usb-A40117UK OK 9 25 54 66 235 61 210 226 33 19
 		h, m, s := now.Clock()
-		// FIXME hacked hard-coded device name into message until JB is fixed!
-		port := strings.SplitN(msg.T + "/usb-A40115A2", "/", 3)[2]
+		port := strings.SplitN(msg.T, "/", 3)[2]
 		line := fmt.Sprintf("L %02d:%02d:%02d.%03d %s %s\n",
-			h, m, s, now.Nanosecond()/1000000, port, []byte(msg.P))
+			h, m, s, now.Nanosecond()/1000000, port, any.Text)
 		currentLogFile.WriteString(line)
 	}
 }
