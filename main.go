@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -32,11 +31,7 @@ func main() {
 
 func logger() {
 	for msg := range jeebus.ConnectToServer("rd/#") {
-		var any struct { Text string }
-		err := json.Unmarshal(msg.P, &any)
-		if err != nil {
-			log.Fatal(err)
-		}
+		text := msg.Get("text")
 		now := time.Now().UTC()
 		datePath := dateFilename(now)
 		if currentLogFile == nil || datePath != currentLogFile.Name() {
@@ -54,7 +49,7 @@ func logger() {
 		h, m, s := now.Clock()
 		port := strings.SplitN(msg.T, "/", 3)[2]
 		line := fmt.Sprintf("L %02d:%02d:%02d.%03d %s %s\n",
-			h, m, s, now.Nanosecond()/1000000, port, any.Text)
+			h, m, s, now.Nanosecond()/1000000, port, text)
 		currentLogFile.WriteString(line)
 	}
 }
