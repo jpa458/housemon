@@ -9,10 +9,6 @@ import (
 	"github.com/jcw/jeebus"
 )
 
-var (
-	rdClient jeebus.Client
-)
-
 func main() {
 	if len(os.Args) <= 1 {
 		log.Fatalf("usage: housemon <cmd> ...")
@@ -21,18 +17,14 @@ func main() {
 	switch os.Args[1] {
 
 	case "decode":
-		decode()
+		var rdClient jeebus.Client
+		rdClient.Connect("rd")
+		rdClient.Register("RF12demo/#", &RF12demoDecodeService{})
+		<-make(chan byte) // wait forever
 
 	default:
 		log.Fatal("unknown sub-command: housemon ", os.Args[1], " ...")
 	}
-}
-
-func decode() {
-	rdClient.Connect("rd")
-	rdClient.Register("RF12demo/#", &RF12demoDecodeService{})
-
-	<-make(chan byte) // wait forever
 }
 
 type RF12demoDecodeService struct {
