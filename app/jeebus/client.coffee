@@ -1,7 +1,5 @@
 ng = angular.module 'myApp'
 
-ws = null
-
 ng.config ($stateProvider, navbarProvider) ->
   $stateProvider.state 'jeebus',
     url: '/jeebus'
@@ -9,32 +7,43 @@ ng.config ($stateProvider, navbarProvider) ->
     controller: 'JeeBusCtrl'
   navbarProvider.add '/jeebus', 'JeeBus', 25
 
-ng.run ($rootScope) ->
+ng.controller 'JeeBusCtrl', ($scope, jeebus) ->
+  # TODO rewrite these example to use the "hm" service i.s.o. "jeebus"
 
-  reconnect = (firstCall) ->
-    # the websocket is served from the same site as the web page
-    # ws = new WebSocket "ws://#{location.host}/ws"
-    ws = new WebSocket "ws://#{location.hostname}:3334/ws", ['HouseMon']
+  $scope.echoTest = ->
+    jeebus.send "echoTest!" # send a test message to JB server's stdout
+    jeebus.rpc('echo', 'Echo', 'me!').then (r) ->
+      $scope.message = r
 
-    ws.onopen = ->
-      # location.reload()  unless firstCall
-      console.log 'Open'
+  $scope.dbGetTest = ->
+    jeebus.rpc('db-get', '/admin/started').then (r) ->
+      $scope.message = r
 
-    ws.onmessage = (m) ->
-      $rootScope.$apply ->
-        msg = JSON.parse(m.data)
-        $rootScope.$broadcast msg[0], msg.slice(1) | 0
+  $scope.dbKeysTest = ->
+    jeebus.rpc('db-keys', '/').then (r) ->
+      $scope.message = r
 
-    ws.onclose = ->
-      console.log 'Closed'
-      setTimeout reconnect, 1000
-    
-  reconnect true
+# HouseMon-specific setup to connect on startup and define a new "HM" service.
 
-ng.controller 'JeeBusCtrl', ($scope) ->
-  $scope.$on 'R', (e, v) -> $scope.redLed = v is 1
-  $scope.$on 'G', (e, v) -> $scope.greenLed = v is 1
-  $scope.$on 'C', (e, v) -> $scope.count = v
+ng.run (jeebus) ->
+  jeebus.connect 'housemon', 3335
 
-  $scope.button = (b, v) ->
-    ws.send JSON.stringify [b, v]
+ng.factory 'HM', (jeebus) ->
+  # For the calls below:
+  #  - if more than one key is specified, they are joined with slashes
+  #  - do not include a slash at the start or end of any key argument
+  
+  # Get the sub-keys under a certain path in the host database as a promise.
+  # This only goes one level deep, i.e. a flat list of immediate sub-keys.
+  keys: (key...) ->
+    jeebus.rpc 'db-keys', "/#{['hm'].concat(key).join '/'}/"
+  
+  # Get a key's value from the host database, returned as a promise.
+  get: (key...) ->
+    jeebus.rpc 'db-get', "/#{['hm'].concat(key).join '/'}"
+
+  # Set a key/value pair in the host database, properly tagged with a prefix.
+  # If value is the empty string or null, the key will be deleted.
+  set: (key..., value) ->
+    jeebus.store "/#{['hm'].concat(key).join '/'}", value
+    @
