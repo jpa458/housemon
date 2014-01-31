@@ -72,11 +72,12 @@ func (s *RF12demoDecodeService) Handle(m *jeebus.Message) {
 		}
 		now := m.GetInt64("time")
 		dev := strings.SplitN(m.T, "/", 2)[1]
-		fmt.Printf("%d %s %X\n", now, dev, buf.Bytes())
+		hex := fmt.Sprintf("%X", buf.Bytes())
+		fmt.Printf("%d %s %s\n", now, dev, hex)
 		rf12msg.ID[0] = 178
 		rf12msg.ID[1] = 22
 		rf12msg.Dev = dev
-		rf12msg.Text = text
+		rf12msg.Text = hex
 		rf12msg.Time = now
 		if found, nT, nL := drivers.JNodeType(grp, rnode, now); found {
 			rf12msg.Loc = nL
