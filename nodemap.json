@@ -1,0 +1,22 @@
+{ "NodeMap" : [ { "G" : 212,
+        "N" : 16,
+        "Name" : "Living",
+        "Te" : -1,
+        "Ts" : 0,
+        "Type" : "roomnode"
+      },
+      { "G" : 178,
+        "N" : 4,
+        "Name" : "Biblio",
+        "Te" : -1,
+        "Ts" : 0,
+        "Type" : "baronode"
+      },
+      { "G" : 178,
+        "N" : 22,
+        "Name" : "Roof",
+        "Te" : -1,
+        "Ts" : 0,
+        "Type" : "weatherWS"
+      }
+    ] }
