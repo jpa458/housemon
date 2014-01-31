@@ -7,13 +7,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"regexp"
 
 	"github.com/jcw/jeebus"
 	"github.com/jcw/housemon/drivers"
-	"regexp"
 )
-
-var confRegex = regexp.MustCompile(`^ [A-Z[\\\]\^_@] i(\d+)(\*)? g(\d+) @ (\d\d\d) MHz`)
 
 func main() {
 	if len(os.Args) <= 1 {
@@ -26,7 +24,7 @@ func main() {
 		rdClient := jeebus.NewClient("rd")
 		rdClient.Register("RF12demo/#", &RF12demoDecodeService{})
 
-		drivers.JNodeMap()
+		//drivers.JNodeMap()
 		msg := map[string]interface{}{"text": "v"}
 		jeebus.Publish("if/RF12demo", msg)
 		msg = map[string]interface{}{"text": "c"}
@@ -41,20 +39,21 @@ func main() {
 	}
 }
 
-type RF12demoDecodeService struct {
-}
-
 var node, grp, band int
 var astx bool
 var (
 	rf12msg struct {
 		ID   [2]int `json:"id"`
 		Dev  string `json:"dev"`
-		Loc string `json:"loc"`
+		Loc  string `json:"loc"`
 		Text string `json:"text"`
 		Time int64  `json:"time"`
 	}
 )
+var confRegex = regexp.MustCompile(`^ [A-Z[\\\]\^_@] i(\d+)(\*)? g(\d+) @ (\d\d\d) MHz`)
+
+type RF12demoDecodeService struct {
+}
 
 func (s *RF12demoDecodeService) Handle(m *jeebus.Message) {
 	text := m.Get("text")
@@ -79,7 +78,7 @@ func (s *RF12demoDecodeService) Handle(m *jeebus.Message) {
 		rf12msg.Dev = dev
 		rf12msg.Text = text
 		rf12msg.Time = now
-		if found, nT, nL := drivers.JNodeType(grp, rnode); found {
+		if found, nT, nL := drivers.JNodeType(grp, rnode, now); found {
 			rf12msg.Loc = nL
 			jeebus.Publish("rf12/"+nT, rf12msg)
 		} else {
@@ -91,6 +90,8 @@ func (s *RF12demoDecodeService) Handle(m *jeebus.Message) {
 		grp, _ = strconv.Atoi(conf[3])
 		band, _ = strconv.Atoi(conf[4])
 		fmt.Println("groupID: ", grp)
+	} else if strings.HasPrefix(text, "[") && strings.Contains(text, "]") {
+		fmt.Println(text)
 	}
 }
 
