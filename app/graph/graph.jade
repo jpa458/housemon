@@ -1,0 +1,9 @@
+.row
+	.large-8.columns
+		
+	.large-4.columns
+		select(ng-model='selectedGraphItem',ng-options="k as v.type +'/'+ v.tag +'/'+ v.name for (k,v) in graphableItems",ng-change="update()")
+		
+.row       
+	.large-12.columns
+		ghgraph

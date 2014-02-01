@@ -1,0 +1,6 @@
+{
+  "name": "graph",
+  "dependencies": {
+    "dygraphs": "~1.0.1" 
+  }
+}
