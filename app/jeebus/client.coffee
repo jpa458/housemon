@@ -33,17 +33,31 @@ ng.factory 'HM', (jeebus) ->
   #  - if more than one key is specified, they are joined with slashes
   #  - do not include a slash at the start or end of any key argument
   
+  keyAsPath = (key) ->
+    return '/'  if key.length is 0
+    "/#{key.join '/'}/"
+    # "/#{['hm'].concat(key).join '/'}/"
+  
   # Get the sub-keys under a certain path in the host database as a promise.
   # This only goes one level deep, i.e. a flat list of immediate sub-keys.
   keys: (key...) ->
-    jeebus.rpc 'db-keys', "/#{['hm'].concat(key).join '/'}/"
+    jeebus.rpc 'db-keys', keyAsPath(key)
   
   # Get a key's value from the host database, returned as a promise.
   get: (key...) ->
-    jeebus.rpc 'db-get', "/#{['hm'].concat(key).join '/'}"
+    jeebus.rpc 'db-get', keyAsPath(key)
 
-  # Set a key/value pair in the host database, properly tagged with a prefix.
+  # Set a key/value pair in the host database.
   # If value is the empty string or null, the key will be deleted.
   set: (key..., value) ->
-    jeebus.store "/#{['hm'].concat(key).join '/'}", value
+    jeebus.store keyAsPath(key), value
+    @
+
+  # Attach to a key prefix, returns the tracked model for that prefix.
+  attach: (key...) ->
+    jeebus.attach keyAsPath(key)
+
+  # Undo the effects of attaching, i.e. stop updating the model entries.
+  detach: (key...) ->
+    jeebus.detach keyAsPath(key)
     @
